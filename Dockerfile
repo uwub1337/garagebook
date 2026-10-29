@@ -37,6 +37,10 @@ RUN install-php-extensions \
     zip \
     opcache
 
+# Render 的容器限制不允許 FrankenPHP 使用內建 capabilities。
+RUN apk add --no-cache libcap \
+    && setcap -r /usr/local/bin/frankenphp
+
 WORKDIR /app
 
 # 銴ˊ敺垢?訾?憟辣??撘Ⅳ
