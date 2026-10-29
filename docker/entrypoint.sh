@@ -8,10 +8,13 @@ cd /app
 mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
 chmod -R 777 storage bootstrap/cache
 
-# 檢查 APP_KEY
-if [ -z "$APP_KEY" ]; then
-    echo "Notice: APP_KEY is not set. Generating temporary key..."
-    php artisan key:generate --force
+# 確保 .env 檔案存在（避免 key:generate 找不到檔案而報錯）
+if [ ! -f /app/.env ]; then
+    if [ -f /app/.env.example ]; then
+        cp /app/.env.example /app/.env
+    else
+        touch /app/.env
+    fi
 fi
 
 # 如果未特別指定資料庫類型，預設使用 SQLite
@@ -19,11 +22,25 @@ if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
     export DB_CONNECTION=sqlite
     mkdir -p database
     touch database/database.sqlite
-    chmod 777 database database/database.sqlite
+    chmod -R 777 database
+fi
+
+# 檢查與生成 APP_KEY
+if [ -n "$APP_KEY" ]; then
+    echo "Using provided APP_KEY."
+    # 將環境變數中的 APP_KEY 寫入或更新到 .env
+    if grep -q "^APP_KEY=" /app/.env; then
+        sed -i "s|^APP_KEY=.*|APP_KEY=${APP_KEY}|" /app/.env
+    else
+        echo "APP_KEY=${APP_KEY}" >> /app/.env
+    fi
+else
+    echo "Notice: APP_KEY is not set. Generating key..."
+    php artisan key:generate --force
 fi
 
 # 執行資料庫遷移
-echo "Running migrations..."
+echo "Running database migrations..."
 php artisan migrate --force || echo "Migration warning: could not run migrations immediately."
 
 # 建立 Storage 捷徑
