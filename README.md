@@ -79,27 +79,31 @@ npm run dev
 
 ## 專案結構
 
-```
+`	ext
 garagebook/
-├─ start.cmd / stop.cmd          # 一鍵啟動 / 停止
-├─ start.ps1 / stop.ps1
-├─ scripts/                      # 啟動腳本
-├─ backend/                      # Laravel 13 API
+├─ start.cmd / stop.cmd          # 本機一鍵啟動 / 一鍵停止
+├─ database-tool.cmd             # 本機資料庫管理（phpMyAdmin）
+├─ Dockerfile / render.yaml      # 雲端部署（Render / Docker）
+├─ docker/                       # 容器伺服器配置（FrankenPHP / Caddy）
+│  ├─ Caddyfile
+│  └─ entrypoint.sh
+├─ scripts/                      # 本機服務腳本
+│  ├─ start.ps1 / stop.ps1
+│  ├─ start-backend.ps1 / start-frontend.ps1
+│  └─ start-mysql.ps1 / start-phpmyadmin.ps1
+├─ backend/                      # Laravel 13 API 後端
 │  ├─ app/Models                 # User, Car, MaintenanceRecord, FuelRecord
 │  ├─ app/Http/Controllers       # Auth, Car, MaintenanceRecord, FuelRecord, Dashboard
 │  ├─ app/Support/CarMetrics.php # 油耗與提醒計算
-│  ├─ database/migrations/       # users, cars, maintenance_records, fuel_records, tokens
-│  ├─ database/seeders/          # 示範資料
-│  └─ routes/api.php
-├─ frontend/                     # Vue 3 SPA
-│  ├─ src/views/                 # Login, Register, Dashboard, Cars, CarDetail
-│  ├─ src/components/            # Modal, StatCard, SpendChart, ReminderList, CarCard, 表單
-│  ├─ src/stores/auth.js         # Pinia 登入狀態
-│  ├─ src/api/http.js            # Axios + Token 攔截器
-│  └─ src/assets/main.css        # Tailwind + 設計樣式
+│  ├─ database/migrations/       # 資料庫遷移檔
+│  └─ routes/api.php             # REST API 路由
+├─ frontend/                     # Vue 3 SPA 前端
+│  ├─ src/views/                 # 頁面檢視 (Dashboard, Cars, CarDetail, Login, Register)
+│  ├─ src/components/            # UI 元件 (Modal, StatCard, SpendChart 等)
+│  ├─ src/stores/                # Pinia 狀態管理
+│  └─ src/api/http.js            # Axios API 客戶端
 └─ tools/                        # 可攜式 PHP / Composer / Node / MySQL（勿刪）
-```
-
+`
 ---
 
 ## 資料表設計

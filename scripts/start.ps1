@@ -1,5 +1,5 @@
-﻿$ErrorActionPreference = 'Stop'
-$root = $PSScriptRoot
+$ErrorActionPreference = 'Stop'
+$root = Split-Path -Parent $PSScriptRoot
 
 & (Join-Path $root 'scripts\start-mysql.ps1')
 

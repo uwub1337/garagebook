@@ -1,4 +1,4 @@
-﻿$root = $PSScriptRoot
+$root = Split-Path -Parent $PSScriptRoot
 
 foreach ($port in 8000, 5173, 8081) {
     Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
