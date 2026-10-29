@@ -21,7 +21,7 @@
 
 4. 要關閉服務，雙擊 **`stop.cmd`**
 
-> 這台電腦原本沒有 PHP / Node / MySQL。專案已內建可攜式版本在 `tools/`，不需要另外安裝，也不會更動系統環境。
+> 若使用本機啟動，請自行準備 PHP、Node.js 與 MySQL，或將可攜式版本放入未納入 Git 的 `tools/` 目錄。
 
 ---
 
@@ -78,6 +78,8 @@ npm run dev
 ---
 
 ## 專案結構
+
+GitHub Actions 會在 push 或 Pull Request 時自動執行後端測試與前端 production build。
 
 `	ext
 garagebook/

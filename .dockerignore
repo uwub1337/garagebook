@@ -1,9 +1,11 @@
-tools/
-.git/
-backend/vendor/
-backend/node_modules/
+.git
+.github
+tools
+backend/vendor
+backend/node_modules
+frontend/node_modules
+frontend/dist
 backend/.env
 backend/storage/logs/*.log
-frontend/node_modules/
-frontend/dist/
+backend/public/uploads
 *.zip

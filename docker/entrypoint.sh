@@ -6,7 +6,7 @@ cd /app
 
 # 確保 storage 與 bootstrap/cache 目錄存在且具備寫入權限
 mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
-chmod -R 777 storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
 # 確保 .env 檔案存在（避免 key:generate 找不到檔案而報錯）
 if [ ! -f /app/.env ]; then
@@ -22,7 +22,7 @@ if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
     export DB_CONNECTION=sqlite
     mkdir -p database
     touch database/database.sqlite
-    chmod -R 777 database
+    chmod -R 775 database
 fi
 
 # 檢查與生成 APP_KEY
