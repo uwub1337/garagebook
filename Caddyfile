@@ -1,0 +1,15 @@
+{
+    frankenphp
+    order php_server before file_server
+}
+
+:{$PORT:10000} {
+    root * /app/public
+    encode zstd gzip
+
+    # 優先處理 PHP 及 API 請求
+    php_server
+
+    # 其餘交由靜態檔案伺服
+    file_server
+}
