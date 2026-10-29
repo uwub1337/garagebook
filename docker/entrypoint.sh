@@ -43,6 +43,12 @@ fi
 echo "Running database migrations..."
 php artisan migrate --force || echo "Migration warning: could not run migrations immediately."
 
+# 預覽環境自動建立示範帳號、車輛與紀錄；正式環境請保持 PREVIEW_MODE=false。
+if [ "$PREVIEW_MODE" = "true" ]; then
+    echo "Seeding preview data..."
+    php artisan db:seed --force
+fi
+
 # 建立 Storage 捷徑
 php artisan storage:link || true
 

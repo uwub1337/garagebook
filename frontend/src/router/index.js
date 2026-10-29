@@ -21,8 +21,10 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   const auth = useAuthStore()
+
+  await auth.ensurePreviewLogin()
 
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
     return { name: 'login' }

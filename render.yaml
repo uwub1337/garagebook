@@ -17,3 +17,7 @@ services:
         generateValue: true
       - key: DB_CONNECTION
         value: sqlite
+      - key: PREVIEW_MODE
+        value: "true"
+      - key: VITE_PREVIEW_MODE
+        value: "true"

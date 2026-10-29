@@ -2,6 +2,11 @@ import { defineStore } from 'pinia'
 import http from '../api/http'
 
 const TOKEN_KEY = 'garagebook_token'
+const DEMO_CREDENTIALS = {
+  email: 'demo@garagebook.test',
+  password: 'password123',
+}
+const PREVIEW_MODE = import.meta.env.VITE_PREVIEW_MODE !== 'false'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -23,6 +28,16 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials) {
       const { data } = await http.post('/auth/login', credentials)
       this.setAuth(data)
+    },
+
+    async ensurePreviewLogin() {
+      if (!PREVIEW_MODE || this.token) return
+
+      try {
+        await this.login(DEMO_CREDENTIALS)
+      } catch {
+        // 預覽資料尚未完成 seed 時，保留一般登入頁作為 fallback。
+      }
     },
 
     async register(payload) {

@@ -4,6 +4,9 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /build
 
+ARG VITE_PREVIEW_MODE=true
+ENV VITE_PREVIEW_MODE=$VITE_PREVIEW_MODE
+
 COPY frontend/package*.json ./
 RUN npm ci
 
