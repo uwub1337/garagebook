@@ -1,167 +1,175 @@
 # GarageBook 車庫手帳
 
-完整前後端分離的愛車保養記錄平台：多車輛管理、保養與加油紀錄、自動油耗計算、花費統計圖表、保養提醒、車輛照片上傳。
+GarageBook 是一個前後端分離的車輛管理平台，用來記錄車輛、保養、加油、花費與保養提醒。
 
-- **前端**：Vue 3 + Vite + Tailwind CSS 4 + Pinia + Vue Router + Chart.js
-- **後端**：Laravel 13 + MySQL 8.4 + Sanctum（Token 驗證）
+## 技術架構
 
----
+- 前端：Vue 3、Vite、Tailwind CSS、Pinia、Vue Router、Chart.js
+- 後端：Laravel 13、PHP 8.3+、Laravel Sanctum
+- 開發資料庫：MySQL 8.4
+- 部署：Docker、FrankenPHP、Caddy、Render
 
-## 快速開始
+## 功能
 
-1. 雙擊 **`start.cmd`**
-   - 會自動啟動 MySQL、Laravel API、Vue 前端，並開啟瀏覽器
-2. 瀏覽器網址：<http://127.0.0.1:5173>
-3. 示範帳號（登入頁已自動填入）：
+- 使用者註冊、登入、登出與 Token 驗證
+- 多車輛管理與車輛照片上傳
+- 保養紀錄：項目、日期、里程、費用、下次到期日／里程
+- 加油紀錄與平均油耗計算
+- 總花費、本月花費、油耗與近六個月統計圖表
+- 逾期／即將到期的保養提醒
+- 使用者資料隔離，每位使用者只能存取自己的車輛與紀錄
 
-   | 項目 | 內容 |
-   |---|---|
-   | Email | `demo@garagebook.test` |
-   | 密碼 | `password123` |
+## 本機快速開始
 
-4. 要關閉服務，雙擊 **`stop.cmd`**
+### 環境需求
 
-> 若使用本機啟動，請自行準備 PHP、Node.js 與 MySQL，或將可攜式版本放入未納入 Git 的 `tools/` 目錄。
+- PHP 8.3 或以上
+- Composer 2
+- Node.js 20 或以上與 npm
+- MySQL 8
 
----
+### Windows 一鍵啟動
 
-## 服務與連接埠
+若已準備好本機依賴，可執行：
 
-| 服務 | 位址 |
-|---|---|
-| 前端（Vite） | http://127.0.0.1:5173 |
-| API（Laravel） | http://127.0.0.1:8000 |
-| MySQL | 127.0.0.1:3306（帳號 `root`，本機開發無密碼） |
-| 車輛照片 | `backend/public/uploads/cars/` |
+```text
+start.cmd
+```
 
-啟動後會開兩個 PowerShell 視窗，分別是 Laravel 與 Vite 的即時日誌，**關閉視窗即停止該服務**。
+前端網址：<http://127.0.0.1:5173>
 
----
+停止所有服務：
 
-## phpMyAdmin
+```text
+stop.cmd
+```
 
-- 雙擊 **`start.cmd`** 會自動啟動 phpMyAdmin 並開啟 <http://127.0.0.1:8081>。
-- 只開資料庫管理工具時，雙擊 **`database-tool.cmd`** 或 **`phpmyadmin.cmd`**。
-- 登入資訊：主機 `127.0.0.1`、帳號 `root`、密碼留空。
-- 登入後選擇左側的 `garagebook` 資料庫，即可瀏覽與管理資料表。
-- phpMyAdmin 僅綁定本機位址；執行 **`stop.cmd`** 可一併停止。
+### 手動啟動
 
-## 手動啟動
+先安裝依賴並建立環境設定：
 
 ```powershell
-# 1) MySQL
-C:\Users\uwu\garagebook\tools\mysql\bin\mysqld.exe --basedir=C:\Users\uwu\garagebook\tools\mysql --datadir=C:\Users\uwu\garagebook\tools\mysql-data --port=3306 --bind-address=127.0.0.1
+cd backend
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+```
 
-# 2) 後端
-cd C:\Users\uwu\garagebook\backend
-C:\Users\uwu\garagebook\tools\php\php.exe artisan serve --host=127.0.0.1 --port=8000
+設定 `backend/.env` 的 MySQL 連線資訊後，分別啟動後端與前端：
 
-# 3) 前端（另開一個終端）
-cd C:\Users\uwu\garagebook\frontend
-$env:Path = "C:\Users\uwu\garagebook\tools\node;" + $env:Path
+```powershell
+# 終端機 1：後端 API
+cd backend
+php artisan serve --host=127.0.0.1 --port=8000
+
+# 終端機 2：前端
+cd frontend
+npm ci
 npm run dev
 ```
 
----
+API 預設網址：<http://127.0.0.1:8000>
 
-## 功能清單
+## phpMyAdmin
 
-- 註冊 / 登入 / 登出（Laravel Sanctum Token）
-- 車庫：新增、編輯、刪除、上傳車輛照片（JPG / PNG / WebP，最大 5MB）
-- 保養紀錄：項目、日期、里程、花費、下次更換日期／里程、備註
-- 加油紀錄：日期、里程、公升數、花費、每公升單價
-- 平均油耗：以相鄰兩次加油的里程差 ÷ 加油量自動估算（km/L）
-- 總覽：總花費、本月花費、平均油耗、近六個月堆疊長條圖、逾期／即將到期提醒
-- 里程同步：新增紀錄時若里程高於車輛目前里程，會自動更新車輛里程
-- 權限控管：每位使用者只能看到自己的車輛與紀錄（403 保護）
+本機開發可使用：
 
----
+```text
+database-tool.cmd
+```
+
+預設網址為 <http://127.0.0.1:8081>。請使用本機 MySQL 的帳號與密碼登入。
+
+## 測試與建置
+
+後端測試：
+
+```powershell
+cd backend
+php artisan test --compact
+```
+
+前端 production build：
+
+```powershell
+cd frontend
+npm ci
+npm run build
+```
+
+GitHub Actions 會在 push 到 `main` 或建立 Pull Request 時，自動執行後端測試與前端建置。
+
+## Docker／Render 部署
+
+專案包含 `Dockerfile`、`docker/Caddyfile` 與 `render.yaml`，可在 Render 使用 Docker Web Service 部署。
+
+部署前請確認：
+
+1. GitHub repository 已連結到 Render。
+2. `APP_KEY`、`APP_ENV`、`APP_DEBUG` 等環境變數已正確設定。
+3. 正式環境應使用持久化資料庫。現有 `render.yaml` 預設使用 SQLite；Render 的本地檔案不適合保存重要正式資料，建議改用 MySQL 或 PostgreSQL。
+4. `APP_DEBUG` 在正式環境必須設為 `false`。
+
+Render 建置完成後，FrankenPHP 會以環境變數 `PORT` 啟動服務，並在啟動時執行資料庫 migration。
 
 ## 專案結構
 
-GitHub Actions 會在 push 或 Pull Request 時自動執行後端測試與前端 production build。
-
-`	ext
+```text
 garagebook/
-├─ start.cmd / stop.cmd          # 本機一鍵啟動 / 一鍵停止
-├─ database-tool.cmd             # 本機資料庫管理（phpMyAdmin）
-├─ Dockerfile / render.yaml      # 雲端部署（Render / Docker）
-├─ docker/                       # 容器伺服器配置（FrankenPHP / Caddy）
-│  ├─ Caddyfile
-│  └─ entrypoint.sh
-├─ scripts/                      # 本機服務腳本
-│  ├─ start.ps1 / stop.ps1
-│  ├─ start-backend.ps1 / start-frontend.ps1
-│  └─ start-mysql.ps1 / start-phpmyadmin.ps1
-├─ backend/                      # Laravel 13 API 後端
-│  ├─ app/Models                 # User, Car, MaintenanceRecord, FuelRecord
-│  ├─ app/Http/Controllers       # Auth, Car, MaintenanceRecord, FuelRecord, Dashboard
-│  ├─ app/Support/CarMetrics.php # 油耗與提醒計算
-│  ├─ database/migrations/       # 資料庫遷移檔
-│  └─ routes/api.php             # REST API 路由
-├─ frontend/                     # Vue 3 SPA 前端
-│  ├─ src/views/                 # 頁面檢視 (Dashboard, Cars, CarDetail, Login, Register)
-│  ├─ src/components/            # UI 元件 (Modal, StatCard, SpendChart 等)
-│  ├─ src/stores/                # Pinia 狀態管理
-│  └─ src/api/http.js            # Axios API 客戶端
-└─ tools/                        # 可攜式 PHP / Composer / Node / MySQL（勿刪）
-`
----
+├── backend/                  # Laravel API
+│   ├── app/                  # Models、Controllers、Services
+│   ├── database/             # migrations、seeders
+│   ├── routes/api.php        # API 路由
+│   └── tests/                # PHPUnit 測試
+├── frontend/                 # Vue SPA
+│   └── src/                  # views、components、stores、API client
+├── docker/                   # Caddy 與容器啟動腳本
+├── scripts/                  # Windows 本機啟動腳本
+├── .github/workflows/        # GitHub Actions CI
+├── Dockerfile
+└── render.yaml
+```
 
-## 資料表設計
+## API 摘要
 
-| 資料表 | 說明 |
-|---|---|
-| `users` | 使用者（姓名、Email、密碼雜湊） |
-| `cars` | 車輛：`user_id`、暱稱、廠牌、車型、年份、車牌、目前里程、燃料種類、照片 |
-| `maintenance_records` | 保養：`car_id`、項目、日期、里程、花費、下次到期日／里程、備註 |
-| `fuel_records` | 加油：`car_id`、日期、里程、公升數、花費、備註 |
-| `personal_access_tokens` | Sanctum API Token |
+需要登入的 API 請帶上：
 
-關聯：`User 1—N Car 1—N MaintenanceRecord / FuelRecord`，刪除車輛會串聯刪除紀錄。
-
----
-
-## API 一覽
-
-需要登入的端點請帶上 `Authorization: Bearer <token>`。
+```http
+Authorization: Bearer <token>
+```
 
 | Method | Endpoint | 說明 |
 |---|---|---|
 | POST | `/api/auth/register` | 註冊 |
-| POST | `/api/auth/login` | 登入（回傳 token） |
-| GET | `/api/auth/me` | 目前使用者 |
-| POST | `/api/auth/logout` | 登出（撤銷 token） |
-| GET | `/api/stats` | 總覽統計（花費、油耗、六個月趨勢、提醒） |
-| GET / POST | `/api/cars` | 車輛列表 / 新增 |
-| GET / PUT / DELETE | `/api/cars/{id}` | 車輛詳情（含紀錄與統計）/ 更新 / 刪除 |
-| POST / DELETE | `/api/cars/{id}/photo` | 上傳 / 移除車輛照片 |
-| GET / POST | `/api/cars/{id}/maintenance` | 保養列表 / 新增 |
-| PUT / DELETE | `/api/maintenance/{id}` | 更新 / 刪除保養 |
-| GET / POST | `/api/cars/{id}/fuel` | 加油列表 / 新增 |
-| PUT / DELETE | `/api/fuel/{id}` | 更新 / 刪除加油 |
+| POST | `/api/auth/login` | 登入並取得 Token |
+| GET | `/api/auth/me` | 取得目前使用者 |
+| POST | `/api/auth/logout` | 登出並撤銷 Token |
+| GET | `/api/stats` | 取得總覽統計 |
+| GET / POST | `/api/cars` | 車輛列表／新增 |
+| GET / PUT / DELETE | `/api/cars/{id}` | 車輛查詢／更新／刪除 |
+| POST / DELETE | `/api/cars/{id}/photo` | 上傳／刪除車輛照片 |
+| GET / POST | `/api/cars/{id}/maintenance` | 保養列表／新增 |
+| PUT / DELETE | `/api/maintenance/{id}` | 更新／刪除保養紀錄 |
+| GET / POST | `/api/cars/{id}/fuel` | 加油列表／新增 |
+| PUT / DELETE | `/api/fuel/{id}` | 更新／刪除加油紀錄 |
 
----
+## 重置資料庫
 
-## 重置資料庫（回到示範資料）
+以下指令會刪除現有資料並重新建立示範資料，請勿在正式環境執行：
 
 ```powershell
-cd C:\Users\uwu\garagebook\backend
-C:\Users\uwu\garagebook\tools\php\php.exe artisan migrate:fresh --seed
+cd backend
+php artisan migrate:fresh --seed
 ```
-
----
 
 ## 常見問題
 
-- **網頁打不開**：確認 `start.cmd` 開啟的兩個 PowerShell 視窗仍在執行（Laravel 與 Vite）。
-- **連接埠被占用**：先執行 `stop.cmd`，或關閉佔用 3306 / 8000 / 5173 的程式。
-- **圖片無法顯示**：確認後端正在執行；照片存於 `backend/public/uploads/cars/`。
-- **要搬到其他位置**：整個 `garagebook` 資料夾搬走即可，啟動腳本使用相對路徑。
-- **正式上線前**：改用正式 MySQL、設定強密碼、`APP_DEBUG=false`，並執行 `npm run build` 由伺服器提供前端檔案。
+- 網頁打不開：確認 API 與 Vite 開發伺服器都正在執行。
+- Port 被占用：停止使用 3306、8000 或 5173 的程序，或修改啟動設定。
+- 圖片無法顯示：確認後端已執行 `php artisan storage:link)，並檢查上傳目錄權限。
+- 新環境無法使用 `start.cmd`：確認 PHP、Composer、Node.js、npm 與 MySQL 已加入 PATH。
 
----
+## 授權
 
-## 技術版本
-
-PHP 8.3.36 · Composer 2.x · Node.js 24.22.1 · MySQL 8.4.13 · Laravel 13.38 · Sanctum 4.3 · Vue 3.5 · Vite 8.3 · Tailwind CSS 4.3 · Chart.js
+本專案目前未另行指定公開授權條款。
