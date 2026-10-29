@@ -4,7 +4,6 @@
 
 - **前端**：Vue 3 + Vite + Tailwind CSS 4 + Pinia + Vue Router + Chart.js
 - **後端**：Laravel 13 + MySQL 8.4 + Sanctum（Token 驗證）
-- **專案位置**：`C:\Users\uwu\garagebook`
 
 ---
 
