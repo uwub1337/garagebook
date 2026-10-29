@@ -48,7 +48,7 @@ COPY --from=frontend-builder /build/dist /app/public
 # 銴ˊ Caddyfile ?????
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh /usr/local/bin/frankenphp
 
 # 蝣箔?甈?甇?Ⅱ
 RUN chown -R www-data:www-data /app \

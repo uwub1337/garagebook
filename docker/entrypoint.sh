@@ -54,4 +54,4 @@ if [ "$APP_ENV" = "production" ]; then
 fi
 
 echo "Starting GarageBook on port ${PORT:-10000}..."
-exec frankenphp run --config /etc/caddy/Caddyfile
+exec /usr/local/bin/frankenphp run --config /etc/caddy/Caddyfile
